@@ -1,0 +1,84 @@
+gatekeeper/
+├── app/                          # Next.js 14 App Router (المسارات الرئيسية)
+│   ├── (auth)/                   # Route Group للبوابة والمصادقة
+│   │   └── page.tsx              # `/` → The Gateway (Landing + Google OAuth)
+│   ├── dashboard/                # `/dashboard` → The Command Center
+│   │   ├── page.tsx              # الواجهة الرئيسية (Sidebar + Grid + Widgets)
+│   │   ├── loading.tsx           # Skeleton loaders أثناء جلب البيانات
+│   │   └── error.tsx             # React Error Boundary خاص بالمسار
+│   ├── settings/                 # `/settings` → The Architect Studio
+│   │   └── page.tsx              # إدارة الفئات، الملف الشخصي، ومنطقة الحذف
+│   ├── achievements/             # `/achievements` → The Hall of Fame
+│   │   └── page.tsx              # معرض الشارات والإحصائيات
+│   ├── api/                      # Server Components / API Routes
+│   │   ├── crypto/route.ts       # Proxy لـ CoinGecko (تخزين مؤقت 60s لتجنب Rate Limits)
+│   │   └── links/metadata/route.ts# جلب Title/Favicon تلقائياً عند لصق الرابط
+│   ├── layout.tsx                # Root Layout (الخطوط، Providers، خلفية Cyber-Whisper)
+│   ├── loading.tsx               # Global Loading Spinner
+│   ├── not-found.tsx             # 404 Page بتصميم Glassmorphism
+│   └── error.tsx                 # Global Error Handler
+│
+├── components/                   # واجهات المستخدم القابلة لإعادة الاستخدام
+│   ├── ui/                       # Primitive Components
+│   │   ├── GlassCard.tsx         # مكون البطاقة الزجاجية (الأساس في التصميم)
+│   │   ├── Button.tsx, Input.tsx, Modal.tsx, Badge.tsx
+│   ├── layout/
+│   │   ├── AppShell.tsx          # الهيكل العام (Header + Dynamic Sidebar)
+│   │   └── Sidebar.tsx           # السيدبار الديناميكي مع فلترة فورية
+│   ├── dashboard/
+│   │   ├── SmartLinkGrid.tsx     # شبكة الروابط الذكية
+│   │   ├── LinkCard.tsx          # بطاقة الرابط (عنوان، وصف، Favicon، عداد نقرات)
+│   │   ├── QuickAddFAB.tsx       # زر الإضافة العائم (< 3 ثوانٍ)
+│   │   ├── ProgressWidget.tsx    # شريط تتبع الدورات/العادات
+│   │   └── CryptoTicker.tsx      # شريط الأسعار اللحظي
+│   ├── settings/
+│   │   ├── CategoryManager.tsx   # CRUD للفئات (إضافة، حذف، إعادة ترتيب، ألوان)
+│   │   ├── ProfileForm.tsx
+│   │   └── DangerZone.tsx        # تصدير JSON / حذف الحساب
+│   ├── achievements/
+│   │   ├── BadgeGallery.tsx      # معرض الشارات (مقفل/مفتوح مع تأثير Neon)
+│   │   ├── StatsGrid.tsx
+│   │   └── ShareCard.tsx         # بطاقة قابلة للمشاركة للإنجازات النادرة
+│   └── shared/
+│       ├── CommandPalette.tsx    # بحث موحد `Ctrl+K`
+│       └── Toast.tsx             # إشعارات النظام
+│
+├── lib/                          # الخدمات والمنطق البرمجي غير المتعلق بـ UI
+│   ├── firebase/
+│   │   ├── config.ts             # تهيئة تطبيق Firebase
+│   │   ├── auth.ts               # دوال المصادقة (signInWithPopup, onAuthStateChanged)
+│   │   └── firestore.ts          # دوال قاعدة البيانات (مطابقة لـ Data Model في PRD)
+│   ├── api/
+│   │   └── coingecko.ts          # عميل CoinGecko مع Fallback & Caching
+│   ├── utils.ts                  # `cn()` لدمج Tailwind classes، formatters
+│   ├── constants.ts              # كتالوج الشارات، الاختصارات، القيم الافتراضية
+│   └── validators.ts             # Zod Schemas للتحقق من صحة الروابط والفئات
+│
+├── store/                        # إدارة الحالة العالمية (Zustand/Jotai)
+│   ├── authStore.ts              # حالة المستخدم، التفضيلات، `reducedMotion`
+│   ├── uiStore.ts                # حالة فتح/إغلاق السيدبار، المودالات، البحث
+│   └── workspaceStore.ts         # الحالة المحلية للفئات والروابط قبل المزامنة
+│
+├── hooks/                        # Custom React Hooks
+│   ├── useKeyboardShortcuts.ts   # مستمعو `Ctrl+K`, `Ctrl+N`, `Ctrl+B`, `Esc`
+│   ├── useAuth.ts                # حماية المسارات ومراقبة حالة الدخول
+│   ├── useFirestoreQuery.ts      # Hook عام لجلب البيانات مع Offline Support
+│   └── useStreak.ts              # منطق عداد الاستمرارية اليومية
+│
+├── types/                        # تعريفات TypeScript
+│   └── index.ts                  # User, Link, Category, Progress, Achievement, Badge
+│
+├── styles/
+│   ├── globals.css               # Tailwind directives، متغيرات الألوان، تأثيرات Glassmorphism
+│   └── animations.css            # Keyframes للـ Glow، Confetti، و Transitions
+│
+├── public/                       # الملفات الثابتة
+│   ├── favicon.ico
+│   └── icons/                    # أيقونات SVG أو Lucide Fallbacks
+│
+├── middleware.ts                 # حماية المسارات (إعادة توجيه غير المسجلين إلى `/`)
+├── tailwind.config.ts            # تعريف لوحة الألوان: dark-bg, primary-text, accent-neon, etc.
+├── tsconfig.json
+├── next.config.js
+├── package.json
+└── .env.local.example            # مفاتيح Firebase + `COINGECKO_API_URL`

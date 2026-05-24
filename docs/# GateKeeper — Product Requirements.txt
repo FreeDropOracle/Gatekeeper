@@ -1,0 +1,302 @@
+# GateKeeper — Product Requirements Document (PRD)
+
+**Version:** 1.0  
+**Date:** May 2026  
+**Status:** Draft  
+**Author:** Product Team
+
+---
+
+## 1. Executive Summary
+
+**GateKeeper** is a **Digital Life Management Platform** designed to transform how users organize, track, and interact with their digital world. It moves beyond a simple bookmark manager into a unified "Digital Headquarters" that reduces information overload through centralization, real-time tracking, and gamification.
+
+**Tagline:** *"Control your digital chaos. Organize your world in one place."*
+
+---
+
+## 2. Problem Statement
+
+In the age of information overload, users suffer from **Digital Fragmentation**:
+- Links, tools, and resources scattered across browsers, notes apps, and cloud drives.
+- No unified view of personal progress (courses, goals, habits).
+- No contextual awareness of real-time data (crypto markets, deadlines).
+- Existing tools (Notion, Raindrop.io, Todoist) cover fragments but lack seamless integration in a single, visually cohesive environment.
+
+**GateKeeper solves this** by merging organization, tracking, and motivation into one futuristic, gamified interface.
+
+---
+
+## 3. Product Vision
+
+Transform GateKeeper from a **utility** into a **digital environment** where users:
+- Own their workspace structure (dynamic categories).
+- Monitor life and market metrics in real time.
+- Stay motivated through achievement badges and progress visualization.
+- Experience a "futuristic OS" aesthetic that makes productivity feel premium.
+
+---
+
+## 4. Target Audience
+
+| Persona | Description | Pain Point |
+|---------|-------------|------------|
+| **The Knowledge Worker** | Developers, designers, researchers who collect hundreds of resources. | Bookmark chaos; no progress tracking on learning paths. |
+| **The Crypto-Curious** | Investors and traders who need quick market glances alongside research links. | Switching between portfolio apps and reference materials. |
+| **The Self-Improver** | Students and lifelong learners tracking courses, goals, and habits. | No visual feedback on completion streaks or milestones. |
+
+---
+
+## 5. Core Pillars
+
+| Pillar | Description | Key Feature |
+|--------|-------------|-------------|
+| **Centralization** | One hub for all productivity tools and links. | Smart Link Grid with dynamic categories. |
+| **Dynamism** | The app reshapes itself to the user's mental model. | Category Manager (add, rename, delete, reorder, change icons). |
+| **Real-Time Tracking** | Live data feeds for personal and market progress. | Dashboard Widgets (Progress Bars + Crypto Ticker). |
+| **Gamification** | Behavioral reinforcement through rewards. | Badge System & Hall of Fame. |
+
+---
+
+## 6. Route Map & Feature Specifications
+
+### 6.1 `/` — The Gateway (Landing + Auth)
+- **Purpose:** First impression and secure entry.
+- **Features:**
+  - Google OAuth authentication (Firebase Auth).
+  - Animated welcome screen reflecting the cyberpunk-glassmorphism brand identity.
+  - Redirect authenticated users to `/dashboard`.
+
+### 6.2 `/dashboard` — The Command Center
+- **Purpose:** Daily operational interface.
+- **Components:**
+  - **Dynamic Sidebar:** User-defined categories with real-time link filtering. Active state highlighted with neon cyan accent.
+  - **Smart Link Grid:** Card-based layout displaying categorized links. Each card shows title, description, category tag, and timestamp.
+  - **Quick Add FAB (Floating Action Button):** Add a new link in < 3 seconds (URL, title auto-fetch, category picker).
+  - **Tracking Widgets:**
+    - *Progress Widgets:* Interactive bars for courses, goals, or habits (percentage, color-coded status).
+    - *Crypto Market Ticker:* Live price strip fed by CoinGecko API (top 5-10 coins, 24h change indicator).
+
+### 6.3 `/settings` — The Architect Studio
+- **Purpose:** Personal workspace structure management.
+- **Features:**
+  - **Category Manager:** CRUD operations on categories (name, icon, color tag). Changes reflect immediately in the sidebar.
+  - **Profile Settings:** Display name, avatar, preferences (theme density, reduced motion).
+  - **Danger Zone:** Bulk data export (JSON) and account deletion.
+
+### 6.4 `/achievements` — The Hall of Fame
+- **Purpose:** Psychological reinforcement and retention.
+- **Features:**
+  - Badge gallery (locked vs. unlocked states with grayscale-to-neon reveal animation).
+  - Statistics cards: total links saved, total learning hours, longest streak, categories created.
+  - Shareable achievement cards for social proof.
+
+---
+
+## 7. Technical Architecture
+
+### 7.1 Frontend Stack
+| Technology | Role | Justification |
+|------------|------|---------------|
+| **Next.js 14** (App Router) | Framework | Superior performance, SEO, route-based code splitting. |
+| **TypeScript** | Language | Type safety at scale; reduces runtime errors in complex state. |
+| **Tailwind CSS** | Styling | Rapid iteration, built-in dark mode support, easy glassmorphism implementation. |
+| **Zustand / Jotai** | State Management | Lightweight global state for auth, categories, and UI preferences (replaces Context API for performance). |
+
+### 7.2 Backend & Infrastructure
+| Technology | Role | Justification |
+|------------|------|---------------|
+| **Firebase Authentication** | Identity | Secure, serverless OAuth (Google) with minimal boilerplate. |
+| **Cloud Firestore** | Database | Real-time NoSQL sync for categories, links, progress, and badges. Offline support included. |
+| **CoinGecko API** | Market Data | Free, reliable crypto prices without API keys for basic tiers. |
+
+### 7.3 Performance & Quality Requirements
+- **Error Boundaries:** React error boundaries at route and widget level to prevent total UI crashes.
+- **E2E Testing:** Playwright or Cypress for critical paths (login → add link → view achievement).
+- **Image & Code Optimization:** `next/image` with lazy loading; dynamic imports for heavy chart components.
+- **Accessibility (a11y):**
+  - WCAG 2.1 AA compliance: minimum contrast ratio 4.5:1 for all body text.
+  - `prefers-reduced-motion` support for all animations and glow effects.
+  - Keyboard shortcuts: `Ctrl/Cmd + K` (universal search), `Ctrl/Cmd + N` (new link).
+
+---
+
+## 8. Design System (The Neon-Glass Aesthetic)
+
+### 8.1 Color Palette
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `dark-bg` | `#0a0a14` | Primary background (deep void). |
+| `primary-text` | `#E0FCFF` | Headlines, active labels (icy white, easier on eyes than pure #FFF). |
+| `secondary-text` | `#94A3B8` | Descriptions, metadata, inactive sidebar items (Slate Blue). |
+| `accent-neon` | `#00F0FF` | Interactive elements, active states, progress percentages, crypto gains (Cyan Neon). |
+| `muted-text` | `#64748B` | Placeholders, footers, disabled states. |
+| `glass-border` | `rgba(0, 240, 255, 0.1)` | Card borders for depth. |
+| `glass-bg` | `rgba(255, 255, 255, 0.03)` | Card backgrounds with blur. |
+
+### 8.2 Typography Scale
+- **Headings:** Inter or Space Grotesk, weight 700, `primary-text`.
+- **Body:** Inter, weight 400, `secondary-text`.
+- **Data/Numbers:** JetBrains Mono or Tabular Figures, `accent-neon` for metrics.
+- **Base Size:** 16px (1rem), scaling to `clamp()` for fluid responsiveness.
+
+### 8.3 Component Primitives
+**Glass Card:**
+```css
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 16px;
+}
+```
+
+**Background Layer:**
+- Subtle radial glows at `opacity: 0.03–0.05`.
+- Faint geometric cyan lines (`rgba(0, 240, 255, 0.05)`) creating a "cyber-whisper" effect.
+- No solid gradients; depth is achieved through layered transparency.
+
+---
+
+## 9. Data Model (Firestore Collections)
+
+```
+/users/{userId}
+  ├── displayName: string
+  ├── email: string
+  ├── photoURL: string
+  ├── preferences: { reducedMotion: boolean, defaultView: string }
+  ├── createdAt: timestamp
+
+/users/{userId}/categories/{categoryId}
+  ├── name: string
+  ├── icon: string (emoji or lucide name)
+  ├── colorTag: string (hex)
+  ├── orderIndex: number
+  ├── createdAt: timestamp
+
+/users/{userId}/links/{linkId}
+  ├── url: string
+  ├── title: string
+  ├── description: string
+  ├── categoryId: ref
+  ├── favicon: string
+  ├── createdAt: timestamp
+  ├── clickCount: number
+
+/users/{userId}/progress/{progressId}
+  ├── title: string (e.g., "React Advanced Course")
+  ├── currentValue: number
+  ├── targetValue: number
+  ├── unit: string (e.g., "%", "hours", "chapters")
+  ├── categoryId: ref (optional)
+  ├── updatedAt: timestamp
+
+/users/{userId}/achievements/{achievementId}
+  ├── badgeId: string (static catalog reference)
+  ├── unlockedAt: timestamp
+  ├── progressSnapshot: map
+```
+
+---
+
+## 10. Gamification System
+
+### 10.1 Badge Catalog (Examples)
+| Badge ID | Name | Unlock Condition | Rarity |
+|----------|------|------------------|--------|
+| `first_link` | Gate Opened | Save your first link | Common |
+| `collector_50` | Digital Hoarder | Save 50 links | Uncommon |
+| `architect` | World Builder | Create 5 custom categories | Uncommon |
+| `learner_10h` | Deep Diver | Log 10 hours of progress | Rare |
+| `crypto_watcher` | Market Hawk | Check crypto widget 7 days in a row | Rare |
+| `master_500` | The Librarian | Save 500 links | Legendary |
+
+### 10.2 Mechanics
+- **Progressive Disclosure:** Locked badges show as silhouettes; unlocked reveal with neon glow + subtle confetti animation.
+- **Streak Counter:** Daily login and link-addition streaks.
+- **Social Proof:** Optional shareable image generation for unlocked rare+ badges.
+
+---
+
+## 11. User Experience Flows
+
+### 11.1 First-Time Onboarding (`/onboarding` — Post-MVP)
+1. Welcome screen with brand animation.
+2. Interactive tutorial: "Create your first category" (guided step).
+3. "Add your first link" FAB highlight.
+4. Dashboard reveal with a pre-loaded "Getting Started" category.
+
+### 11.2 Critical Path: Add Link (Target: < 3 seconds)
+1. User presses `Ctrl+N` or taps FAB.
+2. Modal opens with URL input (auto-focused).
+3. On paste/enter, backend fetches metadata (title, favicon).
+4. User picks category (defaults to last used).
+5. Save → instant optimistic UI update in grid.
+
+### 11.3 Universal Search (Post-MVP)
+- `Ctrl+K` triggers command palette.
+- Searches across link titles, descriptions, and category names.
+- Results grouped by type with keyboard navigation.
+
+---
+
+## 12. Phased Rollout Plan
+
+| Phase | Duration | Deliverables |
+|-------|----------|--------------|
+| **Phase 1: MVP** | Weeks 1–6 | Auth, Dashboard, Link CRUD, Basic Categories, Firestore schema. |
+| **Phase 2: Core Experience** | Weeks 7–10 | Widgets (Progress + Crypto), Badge system, Settings studio, Glassmorphism polish. |
+| **Phase 3: Optimization** | Weeks 11–13 | E2E tests, performance audit (Lighthouse 90+), a11y audit, onboarding flow, beta launch. |
+| **Phase 4: Scale** | Post-launch | Social sharing, AI recommendations, Tasks module (`/tasks`), mobile PWA. |
+
+---
+
+## 13. Success Metrics (KPIs)
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| **Time-to-First-Link** | < 10 seconds | Onboarding funnel analytics |
+| **Daily Active Links Added** | 3+ per active user | Firestore aggregation |
+| **Category Customization Rate** | > 60% of users create a custom category | Settings tracking |
+| **Widget Engagement** | > 40% of DAUs interact with a widget | Click tracking |
+| **Retention (D30)** | > 25% | Firebase Analytics cohorts |
+| **Performance (Lighthouse)** | > 90 across all categories | CI-integrated audits |
+
+---
+
+## 14. Competitive Differentiation
+
+While tools like **Notion** (flexible but overwhelming), **Raindrop.io** (links only), and **Todoist** (tasks only) solve pieces of the puzzle, GateKeeper's moat is **seamless integration**:
+- Not just bookmarks, but *contextual dashboards* (links + progress + market data).
+- Not just organization, but *emotional engagement* (gamification + visual delight).
+- Not a rigid structure, but a *living workspace* that users architect themselves.
+
+---
+
+## 15. Open Questions & Risks
+
+| Risk | Mitigation |
+|------|------------|
+| Feature bloat from too many widgets | Strict "3-second rule" for core actions; widgets are collapsible. |
+| Firestore costs scaling with link metadata | Implement client-side caching and paginated fetching (limit 50/link grid). |
+| CoinGecko API rate limits | Cache prices for 60 seconds; implement fallback "last known price" UI state. |
+| Dark-mode-only aesthetic alienates some users | Post-MVP: optional "Dim Light" theme (deep navy instead of pure black). |
+
+---
+
+## 16. Appendices
+
+### A. Keyboard Shortcuts
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl/Cmd + K` | Universal search |
+| `Ctrl/Cmd + N` | Add new link |
+| `Ctrl/Cmd + B` | Toggle sidebar |
+| `Esc` | Close modal / clear selection |
+
+### B. API Integrations
+- **CoinGecko:** `/simple/price` endpoint for top 10 coins by market cap.
+- **Firebase:** Auth (OAuth 2.0), Firestore (real-time listeners), Storage (optional for avatars).
+
